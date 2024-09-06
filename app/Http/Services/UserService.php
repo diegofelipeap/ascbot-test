@@ -2,14 +2,25 @@
 
 namespace App\Http\Services;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Repositories\UserRepository;
 
 class UserService
 {
+    protected $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function createUser(array $data)
     {
-        $data['password'] = Hash::make($data['password']);
-        return User::create($data);
+        return $this->userRepository->create($data);
     }
+
+    public function findUserByEmail(string $email)
+    {
+        return $this->userRepository->findByEmail($email);
+    }
+
 }

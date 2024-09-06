@@ -1,66 +1,306 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# API de Livros e Usuários - Laravel (ASCBOT)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este projeto é uma API desenvolvida em Laravel para gerenciar livros e usuários, com funcionalidades de autenticação, operações CRUD, gerenciamento de favoritos, validação de dados, jobs assíncronos e uma documentação interativa usando Swagger. O projeto tem finalidade de avaliação técnica.
 
-## About Laravel
+## 🚀 **Funcionalidades Principais**
+- Autenticação de usuários (registro, login, logout) com JWT.
+- Operações CRUD para livros.
+- Sistema de favoritos, onde usuários podem adicionar e remover livros dos seus favoritos.
+- Validação de dados de entrada para assegurar que as requisições sejam processadas corretamente.
+- Job assíncrono para registrar logs após a criação de livros.
+- Documentação interativa gerada com Swagger.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📦 **Instalação e Configuração**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Pré-requisitos:
+- **PHP**: Versão 8.0 ou superior.
+- **Composer**: Gerenciador de dependências para PHP.
+- **Laravel**: Framework PHP.
+- **XAMPP ou WAMP**: Para rodar o servidor localmente (se necessário).
 
-## Learning Laravel
+### Passos para Instalação:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Clonar o Repositório**:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+   ```bash
+   git clone https://github.com/seu-usuario/api-livros.git
+   cd api-livros
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Instalar Dependências**:
 
-## Laravel Sponsors
+   Execute o comando abaixo para instalar todas as dependências do Laravel:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+   ```bash
+   composer install
+   ```
 
-### Premium Partners
+3. **Configurar o Arquivo `.env`**:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+   Copie o arquivo `.env.example` para `.env`:
 
-## Contributing
+   ```bash
+   cp .env.example .env
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   Abra o arquivo `.env` e configure as seguintes variáveis:
 
-## Code of Conduct
+   ```bash
+   APP_NAME=API de Livros
+   APP_URL=http://127.0.0.1:8000
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=nome_do_banco
+   DB_USERNAME=seu_usuario
+   DB_PASSWORD=sua_senha
 
-## Security Vulnerabilities
+   JWT_SECRET=gerar_token_com_o_comando_php_artisan_jwt_secret
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **Gerar a Chave JWT**:
 
-## License
+   Execute o comando abaixo para gerar a chave JWT:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+   ```bash
+   php artisan jwt:secret
+   ```
+
+5. **Executar as Migrações**:
+
+   Rode as migrações para criar as tabelas no banco de dados:
+
+   ```bash
+   php artisan migrate
+   ```
+
+6. **Rodar o Servidor**:
+
+   Inicie o servidor de desenvolvimento:
+
+   ```bash
+   php artisan serve
+   ```
+
+   O servidor será iniciado em `http://127.0.0.1:8000`.
+
+---
+
+## 🗂 **Configuração do Banco de Dados**
+
+A aplicação utiliza MySQL como banco de dados, mas pode ser configurada para outros bancos de dados como PostgreSQL ou SQLite. No arquivo `.env`, ajuste os parâmetros do banco de dados conforme sua necessidade.
+
+- **Migrações**: As migrações criam as seguintes tabelas:
+  - `users`: Armazena os dados dos usuários registrados.
+  - `books`: Armazena os livros cadastrados pelos usuários.
+  - `book_user_favorites`: Tabela pivô que relaciona os usuários com seus livros favoritos.
+
+Execute o seguinte comando para aplicar as migrações e gerar as tabelas no banco de dados:
+
+```bash
+php artisan migrate
+```
+
+---
+
+## 📄 **Documentação da API - Swagger**
+
+A API está documentada usando **Swagger**, permitindo a interação direta com as rotas por meio de uma interface web. A documentação pode ser acessada em:
+
+```
+http://127.0.0.1:8000/api/documentation
+```
+
+### Possíveis Erros e Soluções na Documentação Swagger:
+- **Erro: Undefined array key "annotations"**: Certifique-se de que a chave `annotations` está corretamente configurada em `config/l5-swagger.php`.
+- **Erro: Documentação não carregada**: Limpe o cache de configuração com `php artisan config:clear` e gere a documentação novamente com `php artisan l5-swagger:generate`.
+
+---
+
+## 🔧 **Rotas Disponíveis**
+
+### Autenticação:
+#### **Registro de Usuário**:
+- **Método**: `POST`
+- **URL**: `/api/auth/register`
+- **Payload**:
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+  }
+  ```
+- **Resposta (201)**:
+  ```json
+  {
+    "message": "Usuário criado com sucesso",
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com"
+    }
+  }
+  ```
+
+#### **Login de Usuário**:
+- **Método**: `POST`
+- **URL**: `/api/auth/login`
+- **Payload**:
+  ```json
+  {
+    "email": "john@example.com",
+    "password": "password123"
+  }
+  ```
+- **Resposta (200)**:
+  ```json
+  {
+    "token": "jwt_token"
+  }
+  ```
+
+---
+
+### Livros:
+#### **Listar Livros**:
+- **Método**: `GET`
+- **URL**: `/api/books`
+- **Cabeçalho**:
+  - `Authorization: Bearer {token_jwt}`
+- **Resposta (200)**:
+  ```json
+  [
+    {
+      "id": 1,
+      "title": "O Hobbit",
+      "author": "J.R.R. Tolkien",
+      "description": "Um clássico da fantasia"
+    }
+  ]
+  ```
+
+#### **Criar Livro**:
+- **Método**: `POST`
+- **URL**: `/api/books`
+- **Payload**:
+  ```json
+  {
+    "title": "O Senhor dos Anéis",
+    "author": "J.R.R. Tolkien",
+    "description": "Continuação de O Hobbit"
+  }
+  ```
+- **Resposta (201)**:
+  ```json
+  {
+    "message": "Livro criado com sucesso",
+    "book": {
+      "id": 2,
+      "title": "O Senhor dos Anéis",
+      "author": "J.R.R. Tolkien",
+      "description": "Continuação de O Hobbit"
+    }
+  }
+  ```
+
+#### **Atualizar Livro**:
+- **Método**: `PUT`
+- **URL**: `/api/books/{id}`
+- **Payload**:
+  ```json
+  {
+    "title": "O Hobbit - Edição Revisada"
+  }
+  ```
+- **Resposta (200)**:
+  ```json
+  {
+    "message": "Livro atualizado com sucesso"
+  }
+  ```
+
+#### **Deletar Livro**:
+- **Método**: `DELETE`
+- **URL**: `/api/books/{id}`
+- **Resposta (200)**:
+  ```json
+  {
+    "message": "Livro deletado com sucesso"
+  }
+  ```
+
+---
+
+### Favoritos:
+#### **Adicionar Livro aos Favoritos**:
+- **Método**: `POST`
+- **URL**: `/api/books/{id}/favorite`
+- **Cabeçalho**:
+  - `Authorization: Bearer {token_jwt}`
+- **Resposta (200)**:
+  ```json
+  {
+    "message": "Livro adicionado aos favoritos"
+  }
+  ```
+
+#### **Remover Livro dos Favoritos**:
+- **Método**: `DELETE`
+- **URL**: `/api/books/{id}/favorite`
+- **Cabeçalho**:
+  - `Authorization: Bearer {token_jwt}`
+- **Resposta (200)**:
+  ```json
+  {
+    "message": "Livro removido dos favoritos"
+  }
+  ```
+
+---
+
+## 🛠 **Execução de Jobs**
+
+Este projeto utiliza **jobs assíncronos** para processar ações em segundo plano. Após a criação de um livro, um **job** é disparado para registrar uma mensagem no log. O job é configurado no modo `sync` no ambiente de desenvolvimento, mas pode ser alterado para **fila assíncrona** conforme necessário.
+
+### Configuração:
+No arquivo `.env`, certifique-se de que o valor de `QUEUE_CONNECTION` está definido como `sync` ou configure uma fila como Redis ou Beanstalk para produção.
+
+---
+
+## 📝 **Descrição de Testes**
+
+### Como Testar a Aplicação:
+
+1. **Autenticação**:
+   - Registre um novo usuário utilizando a rota de `POST /api/auth/register`.
+   - Faça login com as credenciais criadas na rota `POST /api/auth/login`.
+
+2. **CRUD de Livros**:
+   - Após obter o token JWT, utilize as rotas para criar, listar, atualizar e deletar livros. Certifique-se de incluir o token JWT no cabeçalho `Authorization`.
+
+3. **Favoritos**:
+   - Adicione e remova livros da lista de favoritos usando as rotas `POST` e `DELETE` de `/api/books/{id}/favorite`.
+
+4. **Verifique o Log**:
+   - Após criar um livro, verifique o arquivo de log em `storage/logs/laravel.log` para garantir que o job foi executado corretamente.
+
+---
+
+## 💡 **Possíveis Erros e Soluções**
+
+1. **Erro ao Acessar
+
+ o Swagger**:
+   - Se a documentação Swagger não carregar, execute os comandos para limpar o cache e gerar a documentação novamente:
+     ```bash
+     php artisan config:clear
+     php artisan l5-swagger:generate
+     ```
+
+2. **Erro com o JWT**:
+   - Se ocorrer um erro com o token JWT, certifique-se de que o `JWT_SECRET` foi gerado corretamente no arquivo `.env`.

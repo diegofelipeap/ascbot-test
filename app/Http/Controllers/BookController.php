@@ -6,6 +6,7 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Services\BookService;
+use App\Jobs\LogBookCreation;
 
 class BookController extends Controller
 {
@@ -16,30 +17,86 @@ class BookController extends Controller
         $this->bookService = $bookService;
     }
 
-    // Listar todos os livros do usuário autenticado
+    /**
+     * @OA\Get(
+     *     path="/api/books",
+     *     summary="Listar todos os livros do usuário autenticado",
+     *     tags={"Livros"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de livros retornada com sucesso",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="title", type="string", example="O Hobbit"),
+     *                 @OA\Property(property="author", type="string", example="J.R.R. Tolkien"),
+     *                 @OA\Property(property="description", type="string", example="Um clássico da fantasia")
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $books = $this->bookService->getAllBooksForUser(Auth::id());
         return response()->json($books, 200);
     }
 
-    // Criar um novo livro
+    /**
+     * @OA\Post(
+     *     path="/api/books",
+     *     summary="Criar um novo livro",
+     *     tags={"Livros"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"title", "author"},
+     *             @OA\Property(property="title", type="string", example="O Hobbit"),
+     *             @OA\Property(property="author", type="string", example="J.R.R. Tolkien"),
+     *             @OA\Property(property="description", type="string", example="Um clássico da fantasia")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Livro criado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Livro criado com sucesso"),
+     *             @OA\Property(property="book", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="title", type="string", example="O Hobbit"),
+     *                 @OA\Property(property="author", type="string", example="J.R.R. Tolkien"),
+     *                 @OA\Property(property="description", type="string", example="Um clássico da fantasia")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="O título é obrigatório")
+     *         )
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
-        // Validações
         $this->validate($request, [
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',  // Limite opcional de tamanho
+            'description' => 'nullable|string|max:1000',
         ]);
 
-        // Criação do livro
         $book = $this->bookService->createBook($request->all(), Auth::id());
+
+        // Despachar o Job após a criação do livro
+        LogBookCreation::dispatch($book);
 
         return response()->json(['message' => 'Livro criado com sucesso', 'book' => $book], 201);
     }
 
-    // Mostrar um livro específico
     public function show($id)
     {
         $book = $this->bookService->getBookById($id, Auth::id());
@@ -51,17 +108,14 @@ class BookController extends Controller
         return response()->json($book, 200);
     }
 
-    // Atualizar um livro existente
     public function update(Request $request, $id)
     {
-        // Validações
         $this->validate($request, [
             'title' => 'sometimes|required|string|max:255',
             'author' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string|max:1000',
         ]);
 
-        // Atualização do livro
         $updated = $this->bookService->updateBook($id, $request->all(), Auth::id());
 
         if (!$updated) {
@@ -71,7 +125,6 @@ class BookController extends Controller
         return response()->json(['message' => 'Livro atualizado com sucesso'], 200);
     }
 
-    // Deletar um livro
     public function destroy($id)
     {
         $deleted = $this->bookService->deleteBook($id, Auth::id());
