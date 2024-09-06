@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -20,12 +18,14 @@ class AuthController extends Controller
     // Cadastro de usuário
     public function register(Request $request)
     {
+        // Validações
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'email' => 'required|string|email|max:255|unique:users', // Validação de e-mail
+            'password' => 'required|string|min:6|confirmed', // Confirmação de senha
         ]);
 
+        // Criação do usuário
         $user = $this->userService->createUser($request->all());
 
         return response()->json(['message' => 'Usuário criado com sucesso', 'user' => $user], 201);
@@ -34,6 +34,12 @@ class AuthController extends Controller
     // Login de usuário
     public function login(Request $request)
     {
+        // Validações
+        $this->validate($request, [
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
         $credentials = $request->only('email', 'password');
 
         if (!$token = Auth::attempt($credentials)) {

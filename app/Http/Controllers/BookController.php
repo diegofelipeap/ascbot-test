@@ -26,12 +26,14 @@ class BookController extends Controller
     // Criar um novo livro
     public function store(Request $request)
     {
+        // Validações
         $this->validate($request, [
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:1000',  // Limite opcional de tamanho
         ]);
 
+        // Criação do livro
         $book = $this->bookService->createBook($request->all(), Auth::id());
 
         return response()->json(['message' => 'Livro criado com sucesso', 'book' => $book], 201);
@@ -52,12 +54,14 @@ class BookController extends Controller
     // Atualizar um livro existente
     public function update(Request $request, $id)
     {
+        // Validações
         $this->validate($request, [
             'title' => 'sometimes|required|string|max:255',
             'author' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:1000',
         ]);
 
+        // Atualização do livro
         $updated = $this->bookService->updateBook($id, $request->all(), Auth::id());
 
         if (!$updated) {
