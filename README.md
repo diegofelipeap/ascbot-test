@@ -293,9 +293,7 @@ No arquivo `.env`, certifique-se de que o valor de `QUEUE_CONNECTION` está defi
 
 ## 💡 **Possíveis Erros e Soluções**
 
-1. **Erro ao Acessar
-
- o Swagger**:
+1. **Erro ao Acessar o Swagger**:
    - Se a documentação Swagger não carregar, execute os comandos para limpar o cache e gerar a documentação novamente:
      ```bash
      php artisan config:clear
